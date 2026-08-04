@@ -123,7 +123,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
             submitBtn.disabled = false;
         })
         .catch(error => {
-            alert("মেসেজ পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+            alert("There was a problem sending the message. Please try again.");
             submitBtn.innerText = "🚀 Send Message";
             submitBtn.disabled = false;
         });
