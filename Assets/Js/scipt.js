@@ -117,7 +117,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     })
         .then(response => response.json())
         .then(data => {
-            alert("ধন্যবাদ! আপনার মেসেজটি সফলভাবে জিমেইলে পাঠানো হয়েছে।");
+            alert("Thank you! Your message has been successfully sent to Gmail");
             document.getElementById('contactForm').reset();
             submitBtn.innerText = "🚀 Send Message";
             submitBtn.disabled = false;
