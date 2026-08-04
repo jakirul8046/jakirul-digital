@@ -11,39 +11,72 @@ document.addEventListener("DOMContentLoaded", function () {
     setInterval(updateLiveClock, 1000);
     updateLiveClock();
 
-// Contact Form Submit -> Send to Email
-document.getElementById('contactForm').addEventListener('submit', async function (e) {
-    e.preventDefault(); // Prevent page reload
+    // 2. Chatbot Widget Toggle
+    const toggleBtn = document.getElementById("chatbotToggleBtn");
+    const closeBtn = document.getElementById("closeChatBtn");
+    const chatWindow = document.getElementById("chatWindow");
+    const hintBubble = document.getElementById("chatHintBubble");
+    const sendBtn = document.getElementById("sendMsgBtn");
+    const chatInput = document.getElementById("chatInput");
+    const chatBody = document.getElementById("chatBody");
 
-    // Your Gmail
+    if (toggleBtn && chatWindow) {
+        toggleBtn.addEventListener("click", function () {
+            chatWindow.classList.toggle("d-none");
+            if (hintBubble) hintBubble.classList.add("d-none");
+        });
+    }
+
+    if (closeBtn && chatWindow) {
+        closeBtn.addEventListener("click", function () {
+            chatWindow.classList.add("d-none");
+        });
+    }
+
+
+
+    if (sendBtn && chatInput) {
+        sendBtn.addEventListener("click", sendMessage);
+        chatInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+    }
+});
+
+
+// Contact Form Submit -> Send to Email & WhatsApp Together
+document.getElementById('contactForm').addEventListener('submit', async function (e) {
+    e.preventDefault(); // পেজ রিলোড হওয়া বন্ধ করবে
+
+    // 🔴 আপনার জিমেইল
     const myEmail = "jakirul5519@gmail.com";
 
-    // Taking data from form
+    // ফর্ম থেকে তথ্য নেওয়া
     const name = document.getElementById('userName').value;
     const email = document.getElementById('userEmail').value;
     const service = document.getElementById('userService').value;
     const message = document.getElementById('userMsg').value;
     const submitBtn = document.getElementById('submitBtn');
 
-    // Change Button Text
+    // বাটনের টেক্সট পরিবর্তন
     submitBtn.innerText = "Sending...";
     submitBtn.disabled = true;
 
-    // 1. Get user country using GeoJS API without limits
-    let userCountry = "Unknown Country";
+    // 🌍 ১. কোনো লিমিট ছাড়া সরাসরি দেশের নাম বের করার API
+    let userCountry = "অজানা দেশ";
     try {
         const res = await fetch('https://get.geojs.io/v1/ip/geo.json');
         if (res.ok) {
             const data = await res.json();
             if (data.country) {
-                userCountry = `${data.country} (${data.country_code})`; // e.g. Bangladesh (BD)
+                userCountry = `${data.country} (${data.country_code})`; // যেমন: Bangladesh (BD)
             }
         }
     } catch (err) {
         console.log("Country fetch error:", err);
     }
 
-    // 2. Send message to email via FormSubmit
+    // 📩 ২. ইমেইলে মেসেজ সেন্ড করা
     fetch(`https://formsubmit.co/ajax/${myEmail}`, {
         method: "POST",
         headers: {
@@ -51,9 +84,6 @@ document.getElementById('contactForm').addEventListener('submit', async function
             'Accept': 'application/json'
         },
         body: JSON.stringify({
-            "_captcha": "false",            // Prevent captcha / spam block issues
-            "_template": "table",           // Format incoming email data nicely in a table
-            "_subject": "New Message from Portfolio Website!", 
             "Client Name": name,
             "Client Email": email,
             "Service Needed": service,
