@@ -83,7 +83,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     const submitBtn = document.getElementById('submitBtn');
 
     // বাটনের টেক্সট পরিবর্তন
-    submitBtn.innerText = "পাঠানো হচ্ছে...";
+    submitBtn.innerText = "Sending...";
     submitBtn.disabled = true;
 
     // 🌍 ১. কোনো লিমিট ছাড়া সরাসরি দেশের নাম বের করার API
