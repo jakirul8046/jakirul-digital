@@ -33,7 +33,31 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // 3. Simple Automated Chat Bot Response
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
 
+        // Render User Message
+        const userDiv = document.createElement("div");
+        userDiv.className = "user-msg bg-success text-white p-2 rounded-3 mb-2 small ms-auto";
+        userDiv.style.maxWidth = "80%";
+        userDiv.textContent = text;
+        chatBody.appendChild(userDiv);
+
+        chatInput.value = "";
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Bot Response Simulation
+        setTimeout(() => {
+            const botDiv = document.createElement("div");
+            botDiv.className = "bot-msg bg-white p-2 rounded-3 shadow-sm mb-2 small text-dark border";
+            botDiv.style.maxWidth = "85%";
+            botDiv.textContent = "Thanks for your inquiry! You can leave a direct message via WhatsApp or use the contact form below.";
+            chatBody.appendChild(botDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 700);
+    }
 
     if (sendBtn && chatInput) {
         sendBtn.addEventListener("click", sendMessage);
@@ -44,39 +68,39 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// Contact Form Submit -> Send to Email & WhatsApp Together
+// Contact Form Submit -> Send to Email
 document.getElementById('contactForm').addEventListener('submit', async function (e) {
-    e.preventDefault(); // পেজ রিলোড হওয়া বন্ধ করবে
+    e.preventDefault(); // Prevent page reload
 
-    // 🔴 আপনার জিমেইল
+    // Your Gmail
     const myEmail = "jakirul5519@gmail.com";
 
-    // ফর্ম থেকে তথ্য নেওয়া
+    // Taking data from form
     const name = document.getElementById('userName').value;
     const email = document.getElementById('userEmail').value;
     const service = document.getElementById('userService').value;
     const message = document.getElementById('userMsg').value;
     const submitBtn = document.getElementById('submitBtn');
 
-    // বাটনের টেক্সট পরিবর্তন
-    submitBtn.innerText = "পাঠানো হচ্ছে...";
+    // Change Button Text
+    submitBtn.innerText = "Sending...";
     submitBtn.disabled = true;
 
-    // 🌍 ১. কোনো লিমিট ছাড়া সরাসরি দেশের নাম বের করার API
-    let userCountry = "অজানা দেশ";
+    // 1. Get user country using GeoJS API without limits
+    let userCountry = "Unknown Country";
     try {
         const res = await fetch('https://get.geojs.io/v1/ip/geo.json');
         if (res.ok) {
             const data = await res.json();
             if (data.country) {
-                userCountry = `${data.country} (${data.country_code})`; // যেমন: Bangladesh (BD)
+                userCountry = `${data.country} (${data.country_code})`; // e.g. Bangladesh (BD)
             }
         }
     } catch (err) {
         console.log("Country fetch error:", err);
     }
 
-    // 📩 ২. ইমেইলে মেসেজ সেন্ড করা
+    // 2. Send message to email via FormSubmit
     fetch(`https://formsubmit.co/ajax/${myEmail}`, {
         method: "POST",
         headers: {
@@ -84,6 +108,9 @@ document.getElementById('contactForm').addEventListener('submit', async function
             'Accept': 'application/json'
         },
         body: JSON.stringify({
+            "_captcha": "false",            // Prevent captcha / spam block issues
+            "_template": "table",           // Format incoming email data nicely in a table
+            "_subject": "New Message from Portfolio Website!", 
             "Client Name": name,
             "Client Email": email,
             "Service Needed": service,
@@ -99,7 +126,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
             submitBtn.disabled = false;
         })
         .catch(error => {
-            alert("মেসেজ পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+            alert("There was a problem sending the message. Please try again.");
             submitBtn.innerText = "🚀 Send Message";
             submitBtn.disabled = false;
         });
