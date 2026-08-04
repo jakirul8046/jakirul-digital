@@ -59,7 +59,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     const submitBtn = document.getElementById('submitBtn');
 
     // বাটনের টেক্সট পরিবর্তন
-    submitBtn.innerText = "Sending...";
+    submitBtn.innerText = "পাঠানো হচ্ছে...";
     submitBtn.disabled = true;
 
     // 🌍 ১. কোনো লিমিট ছাড়া সরাসরি দেশের নাম বের করার API
@@ -99,7 +99,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
             submitBtn.disabled = false;
         })
         .catch(error => {
-            alert("There was a problem sending the message. Please try again.");
+            alert("মেসেজ পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
             submitBtn.innerText = "🚀 Send Message";
             submitBtn.disabled = false;
         });
